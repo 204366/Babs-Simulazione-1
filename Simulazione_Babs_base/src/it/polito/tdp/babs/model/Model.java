@@ -34,4 +34,12 @@ public class Model {
 		return stats;
 	}
 
+	public List<Trip> getTripsWithPickForDay(LocalDate ld) {
+		return babsDAO.getTripsForDayPick(ld);
+	}
+	
+	public List<Trip> getTripsWithDropForDay(LocalDate ld) {
+		return babsDAO.getTripsForDayDrop(ld);
+	}
+
 }

@@ -106,4 +106,56 @@ public class BabsDAO {
 
 		return result;
 	}
+
+	public List<Trip> getTripsForDayPick(LocalDate ld) {
+		List<Trip> result = new LinkedList<Trip>();
+		Connection conn = DBConnect.getInstance().getConnection();
+		String sql = "SELECT * FROM trip WHERE DATE(StartDate) = ?";
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setDate(1, Date.valueOf(ld));
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Trip trip = new Trip(rs.getInt("tripid"), rs.getInt("duration"), rs.getTimestamp("startdate").toLocalDateTime(), rs.getInt("startterminal"),
+						rs.getTimestamp("enddate").toLocalDateTime(), rs.getInt("endterminal"));
+				result.add(trip);
+			}
+			st.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error in database query", e);
+		}
+
+		return result;
+	}
+	
+	public List<Trip> getTripsForDayDrop(LocalDate ld) {
+		List<Trip> result = new LinkedList<Trip>();
+		Connection conn = DBConnect.getInstance().getConnection();
+		String sql = "SELECT * FROM trip WHERE DATE(EndDate) = ?";
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setDate(1, Date.valueOf(ld));
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Trip trip = new Trip(rs.getInt("tripid"), rs.getInt("duration"), rs.getTimestamp("startdate").toLocalDateTime(), rs.getInt("startterminal"),
+						rs.getTimestamp("enddate").toLocalDateTime(), rs.getInt("endterminal"));
+				result.add(trip);
+			}
+			st.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error in database query", e);
+		}
+
+		return result;
+	}
 }
